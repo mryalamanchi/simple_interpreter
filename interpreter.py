@@ -22,6 +22,11 @@ PRECEDENCE = [('left', ['+', '-']),
 LEXER = LG.build()
 PG = ParserGenerator(SYMBOLS, PRECEDENCE)
 
+# If the input is empty
+@PG.production('exp :')
+def empty(e):
+  pass
+
 @PG.production('exp : num')
 def num(e):
   if(type(literal_eval(e[0].value)) is int):
@@ -52,6 +57,10 @@ def arith(e):
     return left_token * right_token
   if op_token.gettokentype() == '^':
     return left_token ** right_token
+
+@PG.error
+def error_handler(e):
+    raise ValueError("Ran into a %s where it wasn't expected" % e.gettokentype())
 
 PARSER = PG.build()
 

@@ -9,13 +9,13 @@ You will need to install `rply` package inorder for this program to work.
 pip3 install rply
 ```
 
-Recommened to use use python2.7 or python3.4+ as mentioned [here](https://github.com/alex/rply#python-compatibility), to use `rply` package
+To use the `rply` package it's recommened to use python2.7 or python3.4+ as mentioned [here](https://github.com/alex/rply#python-compatibility).
 
 
 ## How to test this?
 Super simple.
 
-1. Run`python3 interpreter.py`on your terminal.
+1. Run `python3 interpreter.py` on your terminal.
 2. Enter math expressions.
 3. The result is printed.
 

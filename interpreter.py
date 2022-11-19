@@ -1,4 +1,5 @@
 from rply import LexerGenerator, ParserGenerator
+from ast import literal_eval
 import sys
 
 LG = LexerGenerator()
@@ -10,11 +11,11 @@ LG.add("/", r"\/")
 LG.add("+", r"\+")
 LG.add("-", r"\-")
 LG.add("^", r"\^")
-LG.add("num", r"\d+")
-LG.add("CR", r"\r")
+#LG.add("num", r"\d+")
+LG.add("num", r"(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?")
 LG.ignore(r"\s+")
 
-SYMBOLS = ['*', '/', '+', '-', '^', 'num', 'LPARAN', 'RPARAN', 'CR']
+SYMBOLS = ['*', '/', '+', '-', '^', 'num', 'LPARAN', 'RPARAN']
 PRECEDENCE = [('left', ['+', '-']),
               ('left', ['*', '/']),
               ('right', ['^'])]
@@ -24,15 +25,14 @@ PG = ParserGenerator(SYMBOLS, PRECEDENCE)
 
 @PG.production('exp : num')
 def num(e):
-  return int(e[0].value)
+  if(type(literal_eval(e[0].value)) is int):
+    return int(e[0].value)
+  elif(type(literal_eval(e[0].value)) is float):
+    return float(e[0].value)
 
 @PG.production('exp : LPARAN exp RPARAN')
 def exp_paran(e):
   return e[1]
-
-@PG.production('exp : num CR')
-def cr(e):
-  return e[0]
 
 @PG.production('exp : exp + exp')
 @PG.production('exp : exp - exp')
@@ -54,8 +54,13 @@ def arith(e):
   if op_token.gettokentype() == '^':
     return left_token ** right_token
 
-input = "".join(sys.stdin.readline())
 PARSER = PG.build()
-#print(PARSER.parse(LEXER.lex('1 + 2- 2^2/4')))
-#print(PARSER.parse(LEXER.lex('1 + 2- 2^2/2^2')))
+
+# Comment these lines to test out sample expressions
+input = sys.stdin.readline()
 print(PARSER.parse(LEXER.lex(input)))
+
+# Remove comment for this line to test out sample expressions
+# print(PARSER.parse(LEXER.lex("2 + 2")))
+# print(PARSER.parse(LEXER.lex("2 + 2 / 2")))
+# print(PARSER.parse(LEXER.lex("2 + (2 / 2^2) - 2")))

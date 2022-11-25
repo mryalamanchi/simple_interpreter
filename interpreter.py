@@ -67,6 +67,7 @@ def num(e):
   elif(type(literal_eval(e[0].value)) is float):
     return float(e[0].value)
 
+'''
 @PG.production('exp : + exp')
 @PG.production('exp : - exp')
 def num_neg(e):
@@ -74,6 +75,7 @@ def num_neg(e):
     return e[1]
   elif e[0].gettokentype() == "-":
     return -e[1]
+'''
 
 @PG.production('exp : bitneg num')
 def num_bit_neg(e):
